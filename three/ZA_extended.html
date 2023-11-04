@@ -48,13 +48,9 @@
 	scene.background = new THREE.Color( 0xFFFFFF );
 
 	//Load background texture
-	// const bg_loader = new THREE.TextureLoader();
-	// bg_loader.load('static/ZA_monument_models/bk.png'  , function(texture)
-    //         {
-    //          scene.background = texture;  
-    //         });
+	const bg_loader = new THREE.TextureLoader();
 
-	const left = -5, right = 5, top2 = 4, bottom = -4, near = 1, far = 20;
+	const left = -3.2, right = 3.2, top2 = 2.4, bottom = -2.4, near = 0.01, far = 100;
 	camera = new THREE.OrthographicCamera(left, right, top2, bottom, near, far);
 
 	camera.position.set( 5, 5, 5 );
@@ -69,7 +65,7 @@
 	light.position.set( - 3.25, 3, 3.25 );
 	scene.add( light );
 
-	
+
 	const loader2_temple = new GLTFLoader().setPath( 'static/ZA_extended/' );
 	var load_result = await loader2_temple.loadAsync('1.glb');
 	const m1 = load_result.scene;
@@ -136,15 +132,14 @@
 
 
 	var loaded_info = [];
-	var data_set = 'DS_ZA_Extended'
 	var counts = 0;
 
-async function load_info(file){
+async function load_info(){
 	return new Promise(function(resolve){
 	const loader = new THREE.FileLoader();
 	loader.load(
 	// resource URL
-	file,
+	'./DS_ZA_Extended/0.json',
 	// onLoad callback
 	function ( data ) {
 		// output the text to the console
@@ -234,7 +229,9 @@ function displaypos() {
 				a = m9.clone();}
 			else if(cur_type == 10 ){
 				a = m10.clone();}
-			a = cube.clone();
+			else{
+				console.log("tyoe", cur_type);
+				a = cube.clone();}
 			
 			scale_x = scale_x * 1.0;
 			scale_y = scale_y * 1.0;
@@ -253,68 +250,11 @@ function displaypos() {
 
 }
 
-function a(file) {
-  return new Promise((resolve) => {
+(async function(){
+    await load_info();
+    displaypos(); 
+})();
 
-	load_info(file);
-    // Simulate asynchronous operation
-    setTimeout(resolve, 100);
-  });
-}
-
-function b() {
-  return new Promise((resolve) => {
-	displaypos(); 
-    // Simulate asynchronous operation
-    setTimeout(resolve, 100);
-  });
-}
-
-function c() {
-  return new Promise((resolve) => {
-	render();
-    // Simulate asynchronous operation
-    setTimeout(resolve, 1000);
-  });
-}
-
-function d(index) {
-  return new Promise((resolve) => {
-	saveAsImage(index);
-    // Simulate asynchronous operation
-    setTimeout(resolve, 1000);
-  });
-}
-
-function e() {
-  return new Promise((resolve) => {
-    console.log("e()");
-    // Simulate asynchronous operation
-	clear_scene();
-	renderer.clear();
-	loaded_info = [];
-    setTimeout(resolve, 100);
-  });
-}
-
-
-async function runLoop() {
-  const numLoops = 3; // Number of loops
-
-  for (let i = 50; i < 53; i++) {
-    console.log(`Loop ${i + 1}`);
-		var index = i;
-	var file = './' + data_set + '/' + index + '.json';
-
-    await a(file);
-    await b();
-    await c();
-    await d(index);
-	await e();
-  }
-}
-
-runLoop();
 
 
 function run_download(input) {
@@ -345,7 +285,7 @@ save( new Blob( [ buffer ], { type: 'application/octet-stream' } ), filename );}
 
 	window.addEventListener( 'resize', onWindowResize );
 
-	// render();
+	render();
 
 	function onWindowResize() {
 
@@ -357,48 +297,6 @@ save( new Blob( [ buffer ], { type: 'application/octet-stream' } ), filename );}
 	render();
 
 	}
-
-	function saveAsImage(index) {
-    var imgData, imgNode;
-	console.log("save image");
-
-    try {
-        var strMime = "image/jpeg";
-        var strDownloadMime = "image/octet-stream";
-
-        imgData = renderer.domElement.toDataURL(strMime);
-		var save_name =  data_set + '_' + index + '.jpg';
-
-        saveFile(imgData.replace(strMime, strDownloadMime), save_name);
-
-    } catch (e) {
-        console.log(e);
-        return;
-    }
-
-}
-
-function clear_scene(){
-	while(scene.children.length > 0){
-    scene.remove(scene.children[0]); }
-	scene.add( light );
-
-}
-
-
-
-var saveFile = function (strData, filename) {
-    var link = document.createElement('a');
-    if (typeof link.download === 'string') {
-        document.body.appendChild(link); //Firefox requires the link to be in the body
-        link.download = filename;
-        link.href = strData;
-        link.click();
-        document.body.removeChild(link); //remove the link when done
-    } else {
-        location.replace(uri);
-    }
-}
 
 	function render() {
 

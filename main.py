@@ -9,6 +9,8 @@ import read_file
 import initLSystem
 import complexity 
 
+
+import random
 import sys
 import numpy as np
 from timeit import default_timer as timer
@@ -23,24 +25,42 @@ decorate_path = sys.argv[2]
 generic_export_path = sys.argv[3]
 
 count = 0
-
 complexity_min = 3
-complexity_max = 13
-sample = 10
-total_sample = (complexity_max - complexity_min) * sample
+complexity_max = 15
+sample_base = 30
+sample_increase_rate = 30
+
+total_sample = 0
+lvl_sample = sample_base
+for i in range(complexity_min, complexity_max):
+    total_sample += lvl_sample
+    lvl_sample += sample_increase_rate
+lvl_sample = sample_base
+
 start_time = timer()
 
 generic_visual_bridge_info,generic_object_list,global__object_list,extra_system_list = read_file.read_object_file(file_path)
 
+available_vb = [[8,"-y",3,"+y"], [8,"-y",4,"+y"], [8,"-y",5,"+y"], [8,"-y", 6,"+y"], [8,"-y", 7,"+y"], [3,"+y", 4,"-y"], [3,"+y", 6,"-y"], [4,"-z", 6,"+z"], [5,"+z", 7,"-z"], [6,"+z", 3,"+z"], [7,"-z", 8,"+z"]]
+
 for cur_complexity in range (complexity_min, complexity_max):
 
     cur_level = 0
+    lvl_sample += sample_increase_rate
     while True:
-        if cur_level == sample:
+        if cur_level == lvl_sample:
             break
 
         visual_bridge_info = generic_visual_bridge_info
         visual_bridge_info['complexity'] = cur_complexity
+
+        random_vb = random.choice(available_vb)
+
+        visual_bridge_info['foreground_type'][0] = random_vb[0]
+        visual_bridge_info['foreground_connect'] = random_vb[1]
+        visual_bridge_info['background_type'] = random_vb[2]
+        visual_bridge_info['background_connect'] = random_vb[3]
+
         export_path = generic_export_path + str(count) + '.json' 
 
         #read the inputs
@@ -66,6 +86,6 @@ for cur_complexity in range (complexity_min, complexity_max):
             result_list += innerLayer.produce_innerLayer(matryoshka_path, decorate_path)
 
         used_time = round(timer() - start_time, 1)
-        print("Finished:", count, "of total:", total_sample, "current complexity:", cur_complexity, "current level:", cur_level, "/", sample, "used:", used_time, "seconds")
+        print("Finished:", count, "of total:", total_sample, "current complexity:", cur_complexity, "current level:", cur_level, "/", lvl_sample, "used:", used_time, "seconds")
         output_writer = write2JSON.output()
         output_writer.write_result(result_list, export_path)
