@@ -51,7 +51,7 @@
 	const bg_loader = new THREE.TextureLoader();
 
 	//change 1
-	const left = -5, right = 5, top2 = 4, bottom = -4, near = 1, far = 20;
+	const left = -3.5, right = 2.5, top2 = 2.8, bottom = -2.8, near = 1, far = 20;
 	camera = new THREE.OrthographicCamera(left, right, top2, bottom, near, far);
 
 	camera.position.set( 5, 5, 5 );
@@ -96,7 +96,7 @@
 
 	var loaded_info = [];
 	var counts = 0;
-	var data_set = 'DS_ZA_Extended'
+	var data_set = 'DS'
 
 async function load_info(file){
 	return new Promise(function(resolve){
@@ -185,7 +185,7 @@ function a(file) {
   return new Promise((resolve) => {
 	load_info(file);
     // Simulate asynchronous operation
-    setTimeout(resolve, 100);
+    setTimeout(resolve, 150);
   });
 }
 
@@ -193,7 +193,7 @@ function b() {
   return new Promise((resolve) => {
 	displaypos(); 
     // Simulate asynchronous operation
-    setTimeout(resolve, 100);
+    setTimeout(resolve, 150);
   });
 }
 
@@ -201,7 +201,7 @@ function c() {
   return new Promise((resolve) => {
 	render();
     // Simulate asynchronous operation
-    setTimeout(resolve, 100);
+    setTimeout(resolve, 150);
   });
 }
 
@@ -209,7 +209,7 @@ function d(index) {
   return new Promise((resolve) => {
 	saveAsImage(index);
     // Simulate asynchronous operation
-    setTimeout(resolve, 100);
+    setTimeout(resolve, 150);
   });
 }
 
@@ -220,7 +220,7 @@ function e() {
 	clear_scene();
 	renderer.clear();
 	loaded_info = [];
-    setTimeout(resolve, 100);
+    setTimeout(resolve, 150);
   });
 }
 
@@ -228,7 +228,7 @@ function e() {
 async function runLoop() {
   const numLoops = 3; // Number of loops
 
-  for (let i = 50; i < 55; i++) {
+  for (let i = 1440; i < 1890; i++) {
     console.log(`Loop ${i + 1}`);
 		var index = i;
 	var file = './' + data_set + '/' + index + '.json';
@@ -300,7 +300,7 @@ function saveAsImage(index) {
         var strDownloadMime = "image/octet-stream";
 
         imgData = renderer.domElement.toDataURL(strMime);
-		var save_name =  data_set + '_' + index + '.jpg';
+		var save_name =  index + '.jpg';
 
         saveFile(imgData.replace(strMime, strDownloadMime), save_name);
 
