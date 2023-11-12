@@ -25,10 +25,10 @@ decorate_path = sys.argv[2]
 generic_export_path = sys.argv[3]
 
 count = 0
-complexity_min = 3
-complexity_max = 10
-sample_base = 30
-sample_increase_rate = 60
+complexity_min = 4
+complexity_max = 12
+sample_base = 20
+sample_increase_rate = 30
 
 total_sample = 0
 lvl_sample = sample_base
@@ -42,12 +42,16 @@ start_time = timer()
 generic_visual_bridge_info,generic_object_list,global__object_list,extra_system_list = read_file.read_object_file(file_path)
 
 available_vb = [[8,"-y",3,"+y"], [8,"-y",4,"+y"], [8,"-y",5,"+y"], [8,"-y", 6,"+y"], [8,"-y", 7,"+y"], [3,"+y", 4,"-y"], [3,"+y", 6,"-y"], [4,"-z", 6,"+z"], [5,"+z", 7,"-z"], [6,"+z", 3,"+z"]]
+#factory
+available_vb = [[2,"-y", 3,"+y"], [2,"+x",4,"-x"], [2,"-x",5,"+x"], [2,"+y", 8,"-y"]]
 
 total_sample = 0
 for cur_complexity in range (complexity_min, complexity_max):
     lvl_sample += sample_increase_rate
     total_sample += lvl_sample
     print("complexity", cur_complexity, "lvl_sample", lvl_sample, "total:", total_sample)
+
+lvl_sample = sample_base
 for cur_complexity in range (complexity_min, complexity_max):
 
     cur_level = 0
